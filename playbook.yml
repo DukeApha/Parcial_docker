@@ -1,0 +1,26 @@
+- name: Configurar servidor web
+  hosts: webservers
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Instalar Python
+      raw: apt update && apt install -y python3
+
+    - name: Instalar nginx y curl
+      apt:
+        name:
+          - nginx
+          - curl
+        state: present
+        update_cache: yes
+
+    - name: Iniciar nginx
+      service:
+        name: nginx
+        state: started
+
+    - name: Copiar página web
+      copy:
+        src: html/index.html
+        dest: /var/www/html/index.html
